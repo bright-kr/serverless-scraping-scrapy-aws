@@ -1,6 +1,6 @@
 # Scrapy 및 AWS로 서버리스 スクレイピング하기
 
-[![Promo](https://github.com/luminati-io/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.co.kr/) 
+[![Promo](https://github.com/bright-kr/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.co.kr/) 
 
 이 가이드는 Scrapy Spider를 작성하고, 이를 AWS Lambda에 배포하며, スクレイピング한 데이터를 S3 버킷에 저장하는 방법을 설명합니다. 더 빠르고 신뢰할 수 있는 솔루션을 원하십니까? [Bright Data's Serverless Functions](https://brightdata.co.kr/products/web-scraper/functions)는 70개 이상의 사전 구축된 JavaScript 템플릿, 클라우드 기반 IDE, 그리고 강력한 언블로킹 기능을 제공합니다. 가격은 [$2.7/1,000 page loads](https://brightdata.co.kr/pricing/web-scraper/functions)부터 시작하여, Webスクレイピング에 최적의 솔루션입니다.
 
@@ -40,27 +40,27 @@
 
 AWS 계정에 로그인하고 S3 버킷을 생성합니다. 이를 위해 [‘All services’](https://us-east-2.console.aws.amazon.com/console/services) 페이지로 이동한 뒤 아래로 스크롤합니다.
 
-![A list of all AWS services](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-108.png)
+![A list of all AWS services](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-108.png)
 
 _Storage_ 섹션의 첫 번째 옵션인 _S3_를 클릭합니다.
 
-![The S3 storage service](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-109.png)
+![The S3 storage service](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-109.png)
 
 다음으로 _Create bucket_ 버튼을 클릭합니다.
 
-![Creating a new S3 bucket](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-110.png)
+![Creating a new S3 bucket](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-110.png)
 
 버킷 이름을 지정하고 설정을 선택합니다. 이 가이드를 따라 하는 목적이라면 기본 설정을 사용하셔도 됩니다.
 
-![Naming the new S3 bucket and choosing your settings](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-113.png)
+![Naming the new S3 bucket and choosing your settings](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-113.png)
 
 페이지 오른쪽 하단에 있는 _Create bucket_ 버튼을 클릭합니다.
 
-![Creating the new S3 bucket](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-111.png)
+![Creating the new S3 bucket](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-111.png)
 
 새로 생성된 버킷은 _Amazon S3_ 아래의 _Buckets_ 탭에 표시됩니다.
 
-![Clicking the create bucket button when the configuration is done](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-112.png)
+![Clicking the create bucket button when the configuration is done](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-112.png)
 
 ### Setting Up Your Project
 
@@ -93,15 +93,15 @@ pip install scrapy
 
 대상 사이트로 [books.toscrape](https://books.toscrape.com/)를 사용하겠습니다. 이 사이트는 Webスクレイピング 학습을 위해 만들어진 교육용 사이트입니다. 각 책은 class name이 `product_pod`인 `article`입니다. 우리는 페이지에서 이 모든 요소를 추출하려고 합니다.
 
-![Inspecting one of the book in an article tag](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-114.png)
+![Inspecting one of the book in an article tag](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-114.png)
 
 각 책의 제목은 `h3` 요소 안에 중첩된 `a` 요소 내부에 포함되어 있습니다.
 
-![Inspecting the book title](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-115.png)
+![Inspecting the book title](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-115.png)
 
 각 가격은 `div` 내부에 중첩된 `p`에 포함되어 있으며, class name은 `price_color`입니다.
 
-![Inspecting the book price](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-116.png)
+![Inspecting the book price](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-116.png)
 
 ## Writing the Code
 
@@ -231,19 +231,19 @@ ZIP 파일이 생성되면 AWS Lambda로 이동하여 _Create function._ 을 선
 
 S3 버킷에 접근할 수 있는 권한을 부여하는 것도 잊지 마십시오.
 
-![Creating a new function](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-117.png)
+![Creating a new function](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-117.png)
 
 함수를 생성한 후, 소스 탭의 오른쪽 상단에 있는 _Upload from_ 드롭다운을 선택합니다.
 
-![Lambda upload from](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-118.png)
+![Lambda upload from](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-118.png)
 
 _.zip file_을 선택하고 생성한 ZIP 파일을 업로드합니다.
 
-![Uploading the created ZIP file](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-119.png)
+![Uploading the created ZIP file](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-119.png)
 
 _test_ 버튼을 클릭하고 함수가 실행될 때까지 기다립니다. 실행이 완료되면 S3 버킷을 확인하고, 새로운 파일 _books.json_이 생성되었는지 확인합니다.
 
-![The new books.json file in your S3 bucket](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-120.png)
+![The new books.json file in your S3 bucket](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-120.png)
 
 ## Troubleshooting Tips
 
@@ -251,7 +251,7 @@ _test_ 버튼을 클릭하고 함수가 실행될 때까지 기다립니다. 실
 
 Scrapy를 찾을 수 없다는 오류가 발생하면, `subprocess.run()`의 command array에 다음을 포함하십시오.
 
-![Adding a piece of code in the subprocess.run() function](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-121.png)
+![Adding a piece of code in the subprocess.run() function](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-121.png)
 
 ### General Dependency Issues
 
@@ -265,7 +265,7 @@ python --version
 
 ### Handler Issues
 
-![The handler should match the function you wrote](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-122.png)
+![The handler should match the function you wrote](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-122.png)
 
 핸들러가 `lambda_function.py`의 함수와 일치하는지 확인하십시오. 예를 들어 `lambda_function.handler`는 `lambda_function`이 파일명이고 `handler`가 함수명임을 의미합니다.
 
@@ -275,7 +275,7 @@ python --version
 
 _Attach policies_를 클릭합니다.
 
-![Clicking on 'attach policies' in the Lambda function](https://github.com/luminati-io/serverless-scraping-scrapy-aws/blob/main/images/image-123.png)
+![Clicking on 'attach policies' in the Lambda function](https://github.com/bright-kr/serverless-scraping-scrapy-aws/blob/main/images/image-123.png)
 
 _AmazonS3FullAccess_를 선택합니다.
 
